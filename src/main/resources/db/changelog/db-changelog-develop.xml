@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+   http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet author="aliaksandr.hramyka (generated)" id="1643114817174-1">
+        <createTable tableName="users">
+            <column name="id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="users_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(50)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="Add_new_columns_to_users" author="Alex">
+        <addColumn tableName="users">
+            <column name="password" type="VARCHAR(100)"/>
+            <column name="email" type="VARCHAR(100)">
+                <constraints unique="true" uniqueConstraintName="email_unique_constr"/>
+            </column>
+            <column name="first_name" type="VARCHAR(50)"/>
+            <column name="last_name" type="VARCHAR(50)"/>
+            <column name="is_active" type="BOOLEAN"/>
+            <column name="role_" type="VARCHAR(20)"/>
+            <column name="department_id" type="INTEGER"/>
+            <column name="created_at" type="date"/>
+            <column name="updated_at" type="date"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="Remove_column_name" author="Alex">
+        <dropColumn tableName="users" columnName="name"/>
+    </changeSet>
+    <changeSet id="Create_user_id_seq" author="Alex">
+        <createSequence sequenceName="user_id_seq"  minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet id="Create_table_employee_has_projects" author="Alex">
+        <createTable tableName="employee_has_projects">
+            <column name="employee_id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="empl_has_proj_user_id_pkey"/>
+            </column>
+            <column name="project_id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="empl_has_proj_user_id_pkey"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="Create_table_projects" author="Alex">
+        <createTable tableName="projects">
+            <column name="id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="projects_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(45)"/>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="date_start" type="date"/>
+            <column name="date_end" type="date"/>
+            <column name="created_at" type="date"/>
+            <column name="created_by" type="INTEGER"/>
+            <column name="updated_at" type="date"/>
+            <column name="updated_by" type="INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="Add_foreignKey_project_id_to_empl_has_proj" author="Alex">
+        <addForeignKeyConstraint baseColumnNames="project_id" baseTableName="employee_has_projects" constraintName="empl_has_proj_proj_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="projects"/>
+    </changeSet>
+    <changeSet id="Add_foreignKey_user_id_to_empl_has_proj" author="Alex">
+        <addForeignKeyConstraint baseColumnNames="employee_id" baseTableName="employee_has_projects" constraintName="empl_has_proj_user_id_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="users"/>
+    </changeSet>
+    <changeSet id="Create_projects_id_seq" author="Alex">
+        <createSequence sequenceName="project_id_seq"  minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet id="Add_delete_rule_for_empl_has_projects_fkeys" author="Alex">
+        <dropAllForeignKeyConstraints baseTableName="employee_has_projects"/>
+        <addForeignKeyConstraint baseTableName="employee_has_projects" baseColumnNames="employee_id" constraintName="empl_has_proj_user_id_fkey" referencedTableName="users"
+                                 referencedColumnNames="id" onDelete="CASCADE"/>
+        <addForeignKeyConstraint baseTableName="employee_has_projects" baseColumnNames="project_id" constraintName="empl_has_proj_project_id_fkey" referencedTableName="projects"
+                                 referencedColumnNames="id" onDelete="CASCADE"/>
+    </changeSet>
+    <changeSet id="Create_departments_table" author="Alex">
+        <createTable tableName="departments">
+            <column name="id" type="INTEGER">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="departments_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(45)"/>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="created_at" type="date"/>
+            <column name="created_by" type="int"/>
+            <column name="updated_at" type="date"/>
+            <column name="updated_by" type="int"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="Create_department_id_seq" author="Alex">
+        <createSequence sequenceName="department_id_seq" minValue="1" startValue="1"/>
+    </changeSet>
+    <changeSet id="Create_table_deparment_has_projects" author="Alex">
+        <createTable tableName="department_has_projects">
+            <column name="department_id" type="int">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="depart_has_proj_department_id_pkey"/>
+            </column>
+            <column name="project_id" type="int">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="depart_has_proj_project_id_pkey"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="Add_FK_constraints_for_depart_has_projects" author="Alex">
+        <addForeignKeyConstraint baseTableName="department_has_projects" baseColumnNames="department_id" constraintName="depart_has_proj_depart_id_fkey" referencedTableName="departments"
+                                 referencedColumnNames="id" onDelete="CASCADE"/>
+        <addForeignKeyConstraint baseTableName="department_has_projects" baseColumnNames="project_id" constraintName="depart_has_proj_project_id_fkey" referencedTableName="projects"
+                                 referencedColumnNames="id" onDelete="CASCADE"/>
+    </changeSet>
+
+    <changeSet id="Change_var_type_of_created/updated_by" author="Alex">
+        <modifyDataType tableName="projects" columnName="created_by" newDataType="varchar(55)"/>
+        <modifyDataType tableName="departments" columnName="created_by" newDataType="varchar(55)"/>
+        <modifyDataType columnName="updated_by" newDataType="varchar(55)" tableName="projects"/>
+        <modifyDataType columnName="updated_by" newDataType="varchar(55)" tableName="departments"/>
+    </changeSet>
+</databaseChangeLog>

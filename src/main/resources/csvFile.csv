@@ -1,0 +1,8 @@
+firstName,lastName,email,password,role,active
+alex,alex,alex@mail.ru,12345678,EMPLOYEE,true
+ivan,ivanov,ivan@mail.ru,12345678,ADMIN,true
+nikita,nikita,nikita@mail.ru,12345678,LEAD,true
+alex,alex,alex1@mail.ru,12345678,EMPLOYEE,false
+
+
+
