@@ -1,0 +1,9 @@
+# Ignore .idea
+/.idea
+# Ignore target
+/target
+# Ignore .iml files
+*.iml
+# Ignore mvn files
+/.mvn
+/mvnw.*
